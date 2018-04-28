@@ -1,4 +1,4 @@
-import javax.xml.bind.DatatypeConverter;
+
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -14,12 +14,13 @@ public class HMACGenerator {
     private byte ipad = 0x36; //The bytes used as ipad and opad are random and may be changes TODO check this info
     private byte opad = 0x5c;
 
-    private String key = "random"; //TODO make sure that key is always assigned OR put nullpointer exeption over subsequent code
-    private String message = "message";
+    private String key ; //TODO make sure that key is always assigned OR put nullpointer exeption over subsequent code
+    private String message;
     private byte[] finalMessage;
+    private byte[] digestedMessage;
 
     private byte[] preDigest = new byte[0];
-    byte[] messageInBytes = message.getBytes();
+
 
     public void setKey(String key){
         this.key = key;
@@ -37,20 +38,28 @@ public class HMACGenerator {
         return key;
     }
 
+    public byte getBlockLength(){ return blockLength;}
+
+    public byte[] getDigestedMessage(){
+        return digestedMessage;
+    }
+
     public HMACGenerator(){
     }
 
     public HMACGenerator(String key, String message){
         this.key = key;
         this.message = message;
+
     }
-    byte[] keyInBytes = key.getBytes();
+
 
 
     //TODO check whether the msg is shorter than blockLength. If not then hash the message first
     public byte[] shortening(){
 
         try{
+            byte[] messageInBytes = message.getBytes();
             MessageDigest md  = MessageDigest.getInstance("MD5");
             md.update(messageInBytes);
             preDigest = md.digest();
@@ -72,6 +81,7 @@ public class HMACGenerator {
 
     //padAndHash() is firstly padding ipad and opad in arrays of block length and then XOR the key with opad and ipad
     public void padAndHash() {
+        byte[] keyInBytes = key.getBytes();
         for (int i = 0; i < blockLength; i++) {
             if (i < keyInBytes.length) {
                 keyIpad[i] = keyInBytes[i];
@@ -88,16 +98,17 @@ public class HMACGenerator {
 
 
     public byte[] digesting(){
-    if(preDigest.length == 0){
-        finalMessage =  messageInBytes;
-    }
-    else{
-        finalMessage = preDigest;
-    }
+//    if(preDigest.length == 0){
+//        finalMessage =  messageInBytes;
+//    }
+//    else{
+//        finalMessage = preDigest;
+//    }
         try{
+            byte[] messageInBytes = message.getBytes();
             MessageDigest md  = MessageDigest.getInstance("MD5");
             md.update(keyIpad);
-            md.update(finalMessage);
+            md.update(messageInBytes);
             byte[] innerDigest = md.digest();
 
 
@@ -105,9 +116,9 @@ public class HMACGenerator {
 
             md.update(keyOpad);
             md.update(innerDigest);
-            byte[] outerDigest = md.digest();
+            digestedMessage = md.digest();
 
-            return outerDigest;
+            return digestedMessage;
         }
         catch(NoSuchAlgorithmException e){
             e.printStackTrace();
