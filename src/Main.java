@@ -1,12 +1,12 @@
-import com.sun.prism.shader.Solid_Color_AlphaTest_Loader;
-
+import java.nio.ByteBuffer;
+import java.time.Instant;
 import java.util.Arrays;
 import javax.xml.bind.DatatypeConverter;
 
 public class Main {
 
     public static void main(String[] args) {
-        HMACGenerator HMACode = new HMACGenerator("hfhahibjsaldf", "12345678901234567890123456789012345678901234567890123456789012341");
+        HMACGenerator HMACode = new HMACGenerator("S", "s");
         HMACode.padAndHash();
         HMACode.digesting();
 
@@ -17,11 +17,15 @@ public class Main {
         else{
             HMACode.digesting();
         }
-        System.out.println("Message length: " + HMACode.getMessage().getBytes().length);
-        System.out.println("Key: " + HMACode.getKey());
-        System.out.println("Message: " + HMACode.getMessage());
-        System.out.println("Key XORd with opad + previous digest - > hashed: " + Arrays.toString(HMACode.getDigestedMessage()));
-        System.out.println("Hex digested message: " + DatatypeConverter.printHexBinary(HMACode.getDigestedMessage()));
-        System.out.println("Byte hashed msg:" + Arrays.toString(HMACode.getDigestedMessage()));
+//        System.out.println("Message length: " + HMACode.getMessage().getBytes().length);
+//        System.out.println("Key: " + HMACode.getKey());
+//        System.out.println("Message: " + HMACode.getMessage());
+//        System.out.println("Key XORd with opad + previous digest - > hashed: " + Arrays.toString(HMACode.getDigestedMessage()));
+//        System.out.println("Hex digested message: " + DatatypeConverter.printHexBinary(HMACode.getDigestedMessage()));
+//        System.out.println("Byte hashed msg:" + Arrays.toString(HMACode.getDigestedMessage()));
+        //System.out.println(Instant.now().getEpochSecond()/30);
+
+
+
     }
 }

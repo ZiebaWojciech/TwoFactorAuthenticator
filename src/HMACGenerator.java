@@ -1,10 +1,11 @@
 
+import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 
 public class HMACGenerator {
-    //blockLength is a lenth of block used to hash the message. According to standards it shall be not shorter than 64 bytes.
+    //blockLength is a length of block used to hash the message. According to standards it shall be not shorter than 64 bytes.
     //ipad is an inner padding string. It may be any constant string of length not longer than stated block length.
     //opad is an outer padding string. It may be any constant string of length not longer than stated block length.
     //If ipad or opad is shorter than block length it must be repeated until whole block is filled.
