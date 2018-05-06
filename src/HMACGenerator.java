@@ -53,9 +53,6 @@ public class HMACGenerator {
 
     }
 
-
-
-    //TODO check whether the msg is shorter than blockLength. If not then hash the message first
     public byte[] shortening(){
 
         try{
@@ -63,7 +60,7 @@ public class HMACGenerator {
             MessageDigest md  = MessageDigest.getInstance("MD5");
             md.update(messageInBytes);
             preDigest = md.digest();
-            System.out.println("Preliminary digest (when the message is longer that block length: " + Arrays.toString(preDigest));
+            System.out.println("The message was preliminarily digested as the message was longer than assumed blocked length.");
 
             md.reset();
 
@@ -79,7 +76,7 @@ public class HMACGenerator {
     private byte[] keyIpad = new byte[blockLength];
     private byte[] keyOpad = new byte[blockLength];
 
-    //padAndHash() is firstly padding ipad and opad in arrays of block length and then XOR the key with opad and ipad
+    /*padAndHash() is firstly padding ipad and opad in arrays of block length and then XOR the key with opad and ipad*/
     public void padAndHash() {
         byte[] keyInBytes = key.getBytes();
         for (int i = 0; i < blockLength; i++) {
@@ -98,15 +95,15 @@ public class HMACGenerator {
 
 
     public byte[] digesting(){
-//    if(preDigest.length == 0){
-//        finalMessage =  messageInBytes;
-//    }
-//    else{
-//        finalMessage = preDigest;
-//    }
+    byte[] messageInBytes = message.getBytes();
+    if(preDigest.length == 0){
+        finalMessage =  messageInBytes;
+    }
+    else{
+        finalMessage = preDigest;
+    }
         try{
-            byte[] messageInBytes = message.getBytes();
-            MessageDigest md  = MessageDigest.getInstance("MD5");
+            MessageDigest md  = MessageDigest.getInstance("SHA1");
             md.update(keyIpad);
             md.update(messageInBytes);
             byte[] innerDigest = md.digest();
@@ -125,13 +122,4 @@ public class HMACGenerator {
         }
         return new byte[0];
     }
-
-
-
-
-
-//    public HMACGenerator() {
-//        keyIpad = new byte[blockLength];
-//    }
-//        System.out.println(hex);
 }
