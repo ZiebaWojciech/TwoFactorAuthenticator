@@ -29,12 +29,11 @@ public class Main {
 //        System.out.println("Message length: " + TOTPCode.getMessage().getBytes().length);
         System.out.println("Key: " + TOTPCode.getKey());
         System.out.println("Message: " + TOTPCode.getMessage());
-        System.out.println("Key XORd with opad + previous digest - > hashed: " + Arrays.toString(TOTPCode.getDigestedMessage()));
         System.out.println("Hex digested message: " + DatatypeConverter.printHexBinary(TOTPCode.getDigestedMessage()));
         System.out.println("Byte hashed msg:" + Arrays.toString(TOTPCode.getDigestedMessage()));
         System.out.println(Instant.now().getEpochSecond()/30);
         TOTPCode.dynamicTruncation();
-        System.out.println(TOTPCode.getOffset());
+        //System.out.println(TOTPCode.getOffset());
 
     }
 }

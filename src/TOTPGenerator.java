@@ -11,7 +11,7 @@ public class TOTPGenerator extends HMACGenerator {
         this.key = key;
     }
 
-    public byte getOffset() {
+    public int getOffset() {
         return offset;
     }
 
@@ -25,17 +25,22 @@ public class TOTPGenerator extends HMACGenerator {
         return messageToDigest;
     }
     //dynamicTruncation firstly get the low-order 4 bits out of the digestedMessage[length -1] byte.
-    byte offset;
-    public byte dynamicTruncation(){
-       byte offsetByte = digestedMessage[digestedMessage.length-1];
-       //Loop for extracting the 4 low-order bites.
-        byte offsetBites = 0;
-        for(byte i = 1; i<=8; i *= 2){
-            offsetBites += offsetByte & i;
-        }
-        System.out.println("4 bits: " + offsetBites);
+    int offset;
+    public void dynamicTruncation() {
+        //TODO assure that the offset will be between 0 and length -4
+        offset = digestedMessage[digestedMessage.length - 1] & 15;
+        System.out.println("Offset: " + offset);
 
-       return offset;
+        int binary = (digestedMessage[offset] & 0x7f) << 24 //in binary its 0111 111, so we purposely drop the most significant bit MSB to be sure the result will be un-signed
+                | (digestedMessage[offset + 1] & 0xff) << 16
+                | (digestedMessage[offset + 2] & 0xff) << 8
+                | (digestedMessage[offset + 3] & 0xff);
+//        int binary = (digestedMessage[offset] & 0xff ) << 8;
+
+        for (int i = 0; i < 4; i++) {
+            System.out.println("binary  " + Integer.toBinaryString(digestedMessage[offset+i]) + " int " + digestedMessage[offset+i] + " hex " + Integer.toHexString(digestedMessage[offset+i]));
+        }
+        System.out.println("Code after offset - binary " + Integer.toBinaryString(binary) + " int " + binary + " hex " + Integer.toHexString((binary)));
     }
 
 
