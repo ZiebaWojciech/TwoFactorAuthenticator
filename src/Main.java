@@ -16,11 +16,13 @@ public class Main {
 //        System.out.println("Message: " + HMACode.getMessage());
 //        System.out.println("Key XORd with opad + previous digest - > hashed: " + Arrays.toString(HMACode.getDigestedMessage()));
 //        System.out.println("Hex digested message: " + DatatypeConverter.printHexBinary(HMACode.getDigestedMessage()));
+//        System.out.println("Hex digested message length: " + HMACode.getDigestedMessage().length);
 //        System.out.println("Byte hashed msg:" + Arrays.toString(HMACode.getDigestedMessage()));
 
 //The TOTP module test:
         TOTPGenerator TOTPCode = new TOTPGenerator("tajnyklucz");
 
+        TOTPCode.creatingTimeCounter();
         TOTPCode.padAndHash();
         TOTPCode.digesting();
 
@@ -28,11 +30,11 @@ public class Main {
         System.out.println("Key: " + TOTPCode.getKey());
         System.out.println("Message: " + TOTPCode.getMessage());
         System.out.println("Key XORd with opad + previous digest - > hashed: " + Arrays.toString(TOTPCode.getDigestedMessage()));
-//        System.out.println("Hex digested message: " + DatatypeConverter.printHexBinary(TOTPCode.getDigestedMessage()));
+        System.out.println("Hex digested message: " + DatatypeConverter.printHexBinary(TOTPCode.getDigestedMessage()));
         System.out.println("Byte hashed msg:" + Arrays.toString(TOTPCode.getDigestedMessage()));
         System.out.println(Instant.now().getEpochSecond()/30);
-
-
+        TOTPCode.dynamicTruncation();
+        System.out.println(TOTPCode.getOffset());
 
     }
 }
