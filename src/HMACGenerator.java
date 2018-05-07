@@ -1,6 +1,8 @@
 
+import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 
 public class HMACGenerator {
     //BLOCK_LENGTH is a length of block used to hash the message. According to standards it shall be not shorter than 64 bytes.
@@ -54,7 +56,7 @@ public class HMACGenerator {
         byte[] messageArray = message.getBytes();
         if (messageArray.length > BLOCK_LENGTH) {
             try {
-                MessageDigest md = MessageDigest.getInstance("MD5"); //TODO assure that instance in shortening and digesting is the same thing
+                MessageDigest md = MessageDigest.getInstance("SHA1"); //TODO assure that instance in shortening and digesting is the same thing
                 md.reset();
                 md.update(messageArray);
                 messageToDigest = md.digest();
@@ -105,7 +107,8 @@ public class HMACGenerator {
 //        messageToDigest = preDigest;
 //    }
         try{
-            MessageDigest md  = MessageDigest.getInstance("MD5");
+//            System.out.println("messageToDigest inside HMAC " + Arrays.toString(messageToDigest) + " and in hex: " + DatatypeConverter.printHexBinary(messageToDigest));
+            MessageDigest md  = MessageDigest.getInstance("SHA1");
             md.update(keyIpad);
             md.update(messageToDigest);
             byte[] innerDigest = md.digest();
