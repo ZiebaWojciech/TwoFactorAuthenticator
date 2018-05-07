@@ -6,7 +6,7 @@ import javax.xml.bind.DatatypeConverter;
 public class Main {
 
     public static void main(String[] args) {
-        HMACGenerator HMACode = new HMACGenerator("ggg", "50856806");
+        HMACGenerator HMACode = new HMACGenerator("naszeserduszka", "Kocham Justynkę");
         HMACode.padAndHash();
         HMACode.shortening();
         HMACode.digesting();
@@ -35,7 +35,7 @@ public class Main {
 //        System.out.println("Byte hashed msg:" + Arrays.toString(TOTPCode.getDigestedMessage()));
         System.out.println(Instant.now().getEpochSecond()/30L);
         TOTPCode.dynamicTruncation();
-//        System.out.println(TOTPCode.getOffset());
+
 
     }
 }
