@@ -1,8 +1,6 @@
 
-import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 public class HMACGenerator {
     //blockLength is a length of block used to hash the message. According to standards it shall be not shorter than 64 bytes.
@@ -15,12 +13,14 @@ public class HMACGenerator {
     private byte ipad = 0x36; //The bytes used as ipad and opad are random and may be changes TODO check this info
     private byte opad = 0x5c;
 
-    private String key ; //TODO make sure that key is always assigned OR put nullpointer exeption over subsequent code
-    private String message;
-    private byte[] finalMessage;
+    protected String key ; //TODO make sure that key is always assigned OR put nullpointer exeption over subsequent code
+    protected String message;
+    private byte[] messageToDigest;
     private byte[] digestedMessage;
 
     private byte[] preDigest = new byte[0];
+
+
 
 
     public void setKey(String key){
@@ -54,23 +54,27 @@ public class HMACGenerator {
 
     }
 
-    public byte[] shortening(){
+    public byte[] shortening() {
+        byte[] messageArray = message.getBytes();
+        if (messageArray.length > blockLength) {
+            try {
+                MessageDigest md = MessageDigest.getInstance("MD5");
+                md.reset();
+                md.update(messageArray);
+                messageToDigest = md.digest();
+                System.out.println("The message was preliminarily digested as the message was longer than assumed blocked length.");
 
-        try{
-            byte[] messageInBytes = message.getBytes();
-            MessageDigest md  = MessageDigest.getInstance("MD5");
-            md.update(messageInBytes);
-            preDigest = md.digest();
-            System.out.println("The message was preliminarily digested as the message was longer than assumed blocked length.");
+                md.reset();
 
-            md.reset();
-
-            return preDigest;
+                return messageToDigest;
+            } catch (NoSuchAlgorithmException e) {
+                e.printStackTrace();
+            }
         }
-        catch(NoSuchAlgorithmException e){
-            e.printStackTrace();
+        else {
+        messageToDigest = messageArray;
+        return messageToDigest;
         }
-
         return new byte[0];
     }
 
@@ -94,19 +98,20 @@ public class HMACGenerator {
         }
     }
 
-
+//TODO check if proteced will be enough?
     public byte[] digesting(){
-    byte[] messageInBytes = message.getBytes();
-    if(preDigest.length == 0){
-        finalMessage =  messageInBytes;
-    }
-    else{
-        finalMessage = preDigest;
-    }
+
+//    if(preDigest.length == 0){
+//        byte[] messageInBytes = message.getBytes();
+//        messageToDigest =  messageInBytes;
+//    }
+//    else{
+//        messageToDigest = preDigest;
+//    }
         try{
             MessageDigest md  = MessageDigest.getInstance("SHA1");
             md.update(keyIpad);
-            md.update(messageInBytes);
+            md.update(messageToDigest);
             byte[] innerDigest = md.digest();
 
 
