@@ -1,4 +1,3 @@
-import javax.xml.bind.DatatypeConverter;
 import java.time.Instant;
 
 public class TOTPGenerator extends HMACGenerator {
