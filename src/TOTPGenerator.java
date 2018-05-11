@@ -23,8 +23,13 @@ public class TOTPGenerator extends HMACGenerator {
 
 //  @override
 
-    public void getTOTPCode(){
+    public int getTOTPCode(){
+        return TOTPCode;
+    }
+
+    public void generateTOTPCode(){
         setMessage();
+        generateHMACode();
         dynamicTruncation();
     }
 
@@ -39,7 +44,7 @@ public class TOTPGenerator extends HMACGenerator {
         int offset;
         int truncatedMessage = 0;
         offset = digestedMessage[digestedMessage.length - 1] & 15;
-        //in binary 0x7f is 0111 111, so we purposely drop the most significant bit MSB to be sure the result will be un-signed
+        //in binary 0x7f is 0111 111, so we purposely drop the most significant bit (MSB) to be sure the result will be un-signed
         if(offset>=0 && offset<=(digestedMessage.length-4)) {
             truncatedMessage = (digestedMessage[offset] & 0x7f) << 24
                     | (digestedMessage[offset + 1] & 0xff) << 16
@@ -47,8 +52,8 @@ public class TOTPGenerator extends HMACGenerator {
                     | (digestedMessage[offset + 3] & 0xff);
         }
 
-        TOTPCode = truncatedMessage % 1000000;
-        System.out.println("n-digit OTP:" + TOTPCode);
+        TOTPCode = truncatedMessage % DIVISOR[digitNumber];
+
         return TOTPCode;
     }
 

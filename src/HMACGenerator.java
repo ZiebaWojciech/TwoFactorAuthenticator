@@ -63,7 +63,7 @@ public class HMACGenerator {
 
     }
 
-    public void getHMACode(){
+    public void generateHMACode(){
         digestingInstanceInit();
         padAndHash();
         shortenMessageOverBlockLength(msgDigestBuffor);
