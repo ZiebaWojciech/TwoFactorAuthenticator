@@ -4,7 +4,11 @@ public class TOTPGenerator extends HMACGenerator {
     //Time-Based One-time Password Generator is using HMAC(K,C) method where K is a secret shared between parts and C is a time-based counter.
     //In here a C is a unix time divided by 30 seconds (recommended time window).
     private long timeCounter;
-    private int digitNumber = 6;
+    private int[] DIVISOR =
+            //for   {0,  1,     2,      3,      4,      5,      6,          7,          8} the divisor in modulo function will be:
+                    {1, 10,     100,    1000,   10000,  100000, 1000000,    10000000,   100000000};
+    private int digitNumber;
+    int TOTPCode;
 
     public TOTPGenerator(){}
 
@@ -12,14 +16,26 @@ public class TOTPGenerator extends HMACGenerator {
         this.key = key;
     }
 
-//   @override
-    public void setMessage(){
+    public TOTPGenerator(String key, int digitNumber){
+        this.key = key;
+        this.digitNumber = digitNumber;
+    }
+
+//  @override
+
+    public void getTOTPCode(){
+        setMessage();
+        dynamicTruncation();
+    }
+
+    //  In TOTP a message is a time counter only
+    private void setMessage(){
         timeCounter = (Instant.now().getEpochSecond())/30L;
-        message = Long.toString(timeCounter);
+        this.message = Long.toString(timeCounter);
     }
 
     //dynamicTruncation firstly get the low-order 4 bits out of the digestedMessage[length -1] byte.
-    public int dynamicTruncation() {
+    private int dynamicTruncation() {
         int offset;
         int truncatedMessage = 0;
         offset = digestedMessage[digestedMessage.length - 1] & 15;
@@ -31,9 +47,9 @@ public class TOTPGenerator extends HMACGenerator {
                     | (digestedMessage[offset + 3] & 0xff);
         }
 
-        int OTPassword = truncatedMessage % 1000000;
-        System.out.println("n-digit OTP:" + OTPassword);
-        return OTPassword;
+        TOTPCode = truncatedMessage % 1000000;
+        System.out.println("n-digit OTP:" + TOTPCode);
+        return TOTPCode;
     }
 
 

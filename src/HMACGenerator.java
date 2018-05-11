@@ -17,12 +17,12 @@ public class HMACGenerator {
 
     protected String key ; //TODO make sure that key is always assigned OR put nullpointer exeption over subsequent code
     protected String message;
-    protected MessageDigest md;
+    protected MessageDigest msgDigestBuffor;
 
     protected MessageDigest digestingInstanceInit(){
         try {
-            md = MessageDigest.getInstance("SHA1");
-            return md;
+            msgDigestBuffor = MessageDigest.getInstance("SHA1");
+            return msgDigestBuffor;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
         }
@@ -63,11 +63,11 @@ public class HMACGenerator {
 
     }
 
-    public void HMACGenerating(){
+    public void getHMACode(){
         digestingInstanceInit();
         padAndHash();
-        shortening(md);
-        digesting(md, messageToDigest);
+        shortenMessageOverBlockLength(msgDigestBuffor);
+        digestMessage(msgDigestBuffor, messageToDigest);
     }
     /*padAndHash() is firstly padding IPAD and OPAD in arrays of BLOCK_LENGTH length and then XOR the key with OPAD and IPAD*/
     private void padAndHash() {
@@ -86,7 +86,7 @@ public class HMACGenerator {
         }
     }
 
-    private byte[] shortening(MessageDigest md) {
+    private byte[] shortenMessageOverBlockLength(MessageDigest md) {
         byte[] messageArray = message.getBytes();
         if (messageArray.length > BLOCK_LENGTH) {
                 md.reset();
@@ -103,7 +103,7 @@ public class HMACGenerator {
         }
     }
 
-        private byte[] digesting(MessageDigest md, byte[] messageToDigest){
+        private byte[] digestMessage(MessageDigest md, byte[] messageToDigest){
             md.reset();
             md.update(keyIpad);
             md.update(messageToDigest);

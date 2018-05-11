@@ -1,4 +1,3 @@
-import java.time.Instant;
 import javax.xml.bind.DatatypeConverter;
 
 public class Main {
@@ -10,12 +9,12 @@ public class Main {
 
         System.out.println("Key: " + HMACode.getKey());
         System.out.println("Message: " + HMACode.getMessage());
-        HMACode.HMACGenerating();
+        HMACode.getHMACode();
         System.out.println("Hex digested message: " + DatatypeConverter.printHexBinary(HMACode.getDigestedMessage()));
 //
 ////The HMAC shorted test:
 //        HMACGenerator HMACode2 = new HMACGenerator("secretKey", "a massage");
-//        HMACode2.HMACGenerating();
+//        HMACode2.getHMACode();
 //
 //
 //        System.out.println("Key: " + HMACode2.getKey());
@@ -37,6 +36,8 @@ public class Main {
 //        System.out.println(Instant.now().getEpochSecond()/30L);
 ////        TOTPCode.dynamicTruncation();
 //
+
+
 
     }
 }
