@@ -17,10 +17,11 @@ public class HMACGenerator {
 
     protected String key ; //TODO make sure that key is always assigned OR put nullpointer exeption over subsequent code
     protected String message;
+    protected MessageDigest md;
 
     protected MessageDigest digestingInstanceInit(){
         try {
-            MessageDigest md = MessageDigest.getInstance("SHA1");
+            md = MessageDigest.getInstance("SHA1");
             return md;
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
@@ -65,8 +66,8 @@ public class HMACGenerator {
     public void HMACGenerating(){
         digestingInstanceInit();
         padAndHash();
-        shortening();
-        digesting();
+        shortening(md);
+        digesting(md, messageToDigest);
     }
     /*padAndHash() is firstly padding IPAD and OPAD in arrays of BLOCK_LENGTH length and then XOR the key with OPAD and IPAD*/
     private void padAndHash() {
