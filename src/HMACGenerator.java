@@ -15,54 +15,49 @@ public class HMACGenerator {
     private static final byte OPAD = 0x5c;
 
 
-    protected String key ; //TODO make sure that key is always assigned OR put nullpointer exeption over subsequent code
-    protected String message;
+//    protected String key ; //TODO make sure that key is always assigned OR put nullpointer exeption over subsequent code
+//    protected String message;
 //    protected MessageDigest msgDigestBuffer;
 //
 //    protected byte[] messageToDigest;
 //    protected byte[] digestedMessage;
 
 
-    public void setKey(String key){
-        this.key = key;
-    }
-
-    public void setMessage(String message){
-        this.message = message;
-    }
-
-    public String getMessage() {
-        return message;
-    }
-
-    public String getKey(){
-        return key;
-    }
+//    public void setKey(String key){
+//        this.key = key;
+//    }
+//
+//    public void setMessage(String message){
+//        this.message = message;
+//    }
+//
+//    public String getMessage() {
+//        return message;
+//    }
+//
+//    public String getKey(){
+//        return key;
+//    }
 
 //    public byte[] getDigestedMessage(){
 //        return digestedMessage;
 //    }
 
-    public HMACGenerator(){//TODO only no-args and set/get to set values?
-    }
+//    public HMACGenerator(){//TODO only no-args and set/get to set values?
+//    }
+//
+//    public HMACGenerator(String key, String message){
+//        this.key = key;
+//        this.message = message;
+//
+//    }
 
-    public HMACGenerator(String key, String message){
-        this.key = key;
-        this.message = message;
-
-    }
-
-    public byte[] generateHMACode(){
-//        initiateDigestingInstance();
-//        padAndHashIPAD();
-//        padAndHashOPAD();
-//        shortenMessageLongerThanBlockLength(initiateDigestingInstance());
-          byte[] result = digestMessage(padAndHashIPAD(), padAndHashOPAD(), initiateDigestingInstance(), shortenMessageLongerThanBlockLength(initiateDigestingInstance()));
-          return result;
+    public byte[] generateHMACode(String key, String message){
+          return digestMessage(padAndHashIPAD(key), padAndHashOPAD(key), initiateDigestingInstance(), shortenMessageLongerThanBlockLength(initiateDigestingInstance(), message));
     }
 
     /*padAndHashIPAD() is firstly padding IPAD in arrays of BLOCK_LENGTH length and then XOR the key with IPAD*/
-    private byte[] padAndHashIPAD() {
+    private byte[] padAndHashIPAD(String key) {
         byte[] keyIPAD = new byte[BLOCK_LENGTH];
 
         for (int i = 0; i < BLOCK_LENGTH; i++) {
@@ -77,7 +72,7 @@ public class HMACGenerator {
     }
 
     /*padAndHashOPAD() is firstly padding OPAD in array of BLOCK_LENGTH length and then XOR the key with OPAD*/
-    private byte[] padAndHashOPAD() {
+    private byte[] padAndHashOPAD(String key) {
         byte[] keyOPAD = new byte[BLOCK_LENGTH];
 
         for (int i = 0; i < BLOCK_LENGTH; i++) {
@@ -102,7 +97,7 @@ public class HMACGenerator {
         return null;
     }
 
-    private byte[] shortenMessageLongerThanBlockLength(MessageDigest msgDigestBuffer) {
+    private byte[] shortenMessageLongerThanBlockLength(MessageDigest msgDigestBuffer, String message) {
         byte [] messageToDigest;
         if (message.getBytes().length > BLOCK_LENGTH) {
                 msgDigestBuffer.reset();

@@ -4,12 +4,12 @@ import java.util.Arrays;
 public class Main {
 
     public static void main(String[] args) {
-        HMACGenerator HMACode = new HMACGenerator("secretKey", "a massage");
+        HMACGenerator HMACode = new HMACGenerator();
 
-        System.out.println("Key: " + HMACode.getKey());
-        System.out.println("Message: " + HMACode.getMessage());
+//        System.out.println("Key: " + HMACode.getKey());
+//        System.out.println("Message: " + HMACode.getMessage());
 //        HMACode.generateHMACode();
-        System.out.println("Hex digested message: " + DatatypeConverter.printHexBinary(HMACode.generateHMACode()));
+        System.out.println("Hex digested message: " + DatatypeConverter.printHexBinary(HMACode.generateHMACode("sekret", "wiadomość")));
 //
 
 ////The TOTP module test:
@@ -32,8 +32,8 @@ public class Main {
 //        System.out.println("Message length: " + TOTPCode2.getMessage().getBytes().length);
 //        System.out.println("Key: " + TOTPCode2.getKey());
 //        System.out.println("Message: " + TOTPCode2.getMessage());
-//        System.out.println("Hex digested message for TOTP: " + DatatypeConverter.printHexBinary(TOTPCode2.getDigestedMessage()));
-//        System.out.println("Byte hashed msg:" + Arrays.toString(TOTPCode2.getDigestedMessage()));
+//        System.out.println("Hex digested message for TOTP: " + DatatypeConverter.printHexBinary(TOTPCode2.generateTOTPCode());
+//        System.out.println("Byte hashed msg:" + Arrays.toString(TOTPCode2.generateTOTPCode());
 
 
     }
