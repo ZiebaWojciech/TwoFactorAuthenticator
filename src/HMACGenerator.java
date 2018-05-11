@@ -9,29 +9,18 @@ public class HMACGenerator {
     //If IPAD or OPAD is shorter than block length it must be repeated until whole block is filled.
 
     //BLOCK_LENGTH, IPAD and OPAD at his stage will be constant and not to be changed.
-    private byte BLOCK_LENGTH = 64; //64 is a recommended length of block
-    private byte IPAD = 0x36;
-    private byte OPAD = 0x5c;
-    private byte[] keyIpad = new byte[BLOCK_LENGTH];
-    private byte[] keyOpad = new byte[BLOCK_LENGTH];
+    private static final byte BLOCK_LENGTH = 64; //64 is a recommended length of block/
+    // OPAD and IPAD are fixed values, recommended as below (as hamming value is 4 and it is considered optimal)
+    private static final byte IPAD = 0x36;
+    private static final byte OPAD = 0x5c;
+
 
     protected String key ; //TODO make sure that key is always assigned OR put nullpointer exeption over subsequent code
     protected String message;
-    protected MessageDigest msgDigestBuffor;
-
-    protected MessageDigest digestingInstanceInit(){
-        try {
-            msgDigestBuffor = MessageDigest.getInstance("SHA1");
-            return msgDigestBuffor;
-        } catch (NoSuchAlgorithmException e) {
-            e.printStackTrace();
-        }
-        return null;
-    }
-
-
-    protected byte[] messageToDigest;
-    protected byte[] digestedMessage;
+//    protected MessageDigest msgDigestBuffer;
+//
+//    protected byte[] messageToDigest;
+//    protected byte[] digestedMessage;
 
 
     public void setKey(String key){
@@ -50,11 +39,11 @@ public class HMACGenerator {
         return key;
     }
 
-    public byte[] getDigestedMessage(){
-        return digestedMessage;
-    }
+//    public byte[] getDigestedMessage(){
+//        return digestedMessage;
+//    }
 
-    public HMACGenerator(){
+    public HMACGenerator(){//TODO only no-args and set/get to set values?
     }
 
     public HMACGenerator(String key, String message){
@@ -63,57 +52,81 @@ public class HMACGenerator {
 
     }
 
-    public void generateHMACode(){
-        digestingInstanceInit();
-        padAndHash();
-        shortenMessageOverBlockLength(msgDigestBuffor);
-        digestMessage(msgDigestBuffor, messageToDigest);
+    public byte[] generateHMACode(){
+//        initiateDigestingInstance();
+//        padAndHashIPAD();
+//        padAndHashOPAD();
+//        shortenMessageLongerThanBlockLength(initiateDigestingInstance());
+          byte[] result = digestMessage(padAndHashIPAD(), padAndHashOPAD(), initiateDigestingInstance(), shortenMessageLongerThanBlockLength(initiateDigestingInstance()));
+          return result;
     }
-    /*padAndHash() is firstly padding IPAD and OPAD in arrays of BLOCK_LENGTH length and then XOR the key with OPAD and IPAD*/
-    private void padAndHash() {
-        byte[] keyInBytes = key.getBytes();
+
+    /*padAndHashIPAD() is firstly padding IPAD in arrays of BLOCK_LENGTH length and then XOR the key with IPAD*/
+    private byte[] padAndHashIPAD() {
+        byte[] keyIPAD = new byte[BLOCK_LENGTH];
+
         for (int i = 0; i < BLOCK_LENGTH; i++) {
-            if (i < keyInBytes.length) {
-                keyIpad[i] = keyInBytes[i];
-                keyOpad[i] = keyInBytes[i];
+            if (i < key.getBytes().length) {
+                keyIPAD[i] = key.getBytes()[i];
             } else {
-                keyIpad[i] = 0;
-                keyOpad[i] = 0;
+                keyIPAD[i] = 0;
             }
-
-            keyIpad[i] ^= IPAD;
-            keyOpad[i] ^= OPAD;
+            keyIPAD[i] ^= IPAD;
         }
+        return keyIPAD;
     }
 
-    private byte[] shortenMessageOverBlockLength(MessageDigest md) {
-        byte[] messageArray = message.getBytes();
-        if (messageArray.length > BLOCK_LENGTH) {
-                md.reset();
-                md.update(messageArray);
-                messageToDigest = md.digest();
-                System.out.println("The message was preliminarily digested as the message was longer than assumed blocked length.");
+    /*padAndHashOPAD() is firstly padding OPAD in array of BLOCK_LENGTH length and then XOR the key with OPAD*/
+    private byte[] padAndHashOPAD() {
+        byte[] keyOPAD = new byte[BLOCK_LENGTH];
 
-                return messageToDigest;
+        for (int i = 0; i < BLOCK_LENGTH; i++) {
+            if (i < key.getBytes().length) {
+                keyOPAD[i] = key.getBytes()[i];
+            } else {
+                keyOPAD[i] = 0;
+            }
+            keyOPAD[i] ^= OPAD;
+        }
+        return keyOPAD;
+    }
+
+
+    private MessageDigest initiateDigestingInstance(){
+        try {
+            MessageDigest msgDigestBuffer = MessageDigest.getInstance("SHA1");
+            return msgDigestBuffer;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private byte[] shortenMessageLongerThanBlockLength(MessageDigest msgDigestBuffer) {
+        byte [] messageToDigest;
+        if (message.getBytes().length > BLOCK_LENGTH) {
+                msgDigestBuffer.reset();
+                msgDigestBuffer.update(message.getBytes());
+                messageToDigest = msgDigestBuffer.digest();
+                System.out.println("The message was preliminarily digested as the message was longer than assumed blocked length.");
         }
         else {
-        messageToDigest = messageArray;
-
-        return messageToDigest;
+        messageToDigest = message.getBytes();
         }
+        return messageToDigest;
     }
 
-        private byte[] digestMessage(MessageDigest md, byte[] messageToDigest){
-            md.reset();
-            md.update(keyIpad);
-            md.update(messageToDigest);
-            byte[] innerDigest = md.digest();
+        private byte[] digestMessage(byte[] keyIPAD, byte[] keyOPAD, MessageDigest msgDigestBuffer, byte[] messageToDigest){
+            msgDigestBuffer.reset();
+            msgDigestBuffer.update(keyIPAD);
+            msgDigestBuffer.update(messageToDigest);
+            byte[] digestedMessage = msgDigestBuffer.digest();
 
-            md.reset();
+            msgDigestBuffer.reset();
 
-            md.update(keyOpad);
-            md.update(innerDigest);
-            digestedMessage = md.digest();
+            msgDigestBuffer.update(keyOPAD);
+            msgDigestBuffer.update(digestedMessage);
+            digestedMessage = msgDigestBuffer.digest();
 
             return digestedMessage;
     }
