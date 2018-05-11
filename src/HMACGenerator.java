@@ -14,44 +14,6 @@ public class HMACGenerator {
     private static final byte IPAD = 0x36;
     private static final byte OPAD = 0x5c;
 
-
-//    protected String key ; //TODO make sure that key is always assigned OR put nullpointer exeption over subsequent code
-//    protected String message;
-//    protected MessageDigest msgDigestBuffer;
-//
-//    protected byte[] messageToDigest;
-//    protected byte[] digestedMessage;
-
-
-//    public void setKey(String key){
-//        this.key = key;
-//    }
-//
-//    public void setMessage(String message){
-//        this.message = message;
-//    }
-//
-//    public String getMessage() {
-//        return message;
-//    }
-//
-//    public String getKey(){
-//        return key;
-//    }
-
-//    public byte[] getDigestedMessage(){
-//        return digestedMessage;
-//    }
-
-//    public HMACGenerator(){//TODO only no-args and set/get to set values?
-//    }
-//
-//    public HMACGenerator(String key, String message){
-//        this.key = key;
-//        this.message = message;
-//
-//    }
-
     public byte[] generateHMACode(String key, String message){
           return digestMessage(padAndHashIPAD(key), padAndHashOPAD(key), initiateDigestingInstance(), shortenMessageLongerThanBlockLength(initiateDigestingInstance(), message));
     }
