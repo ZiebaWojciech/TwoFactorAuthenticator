@@ -1,32 +1,34 @@
-import java.nio.ByteBuffer;
 import java.time.Instant;
-import java.util.Arrays;
 import javax.xml.bind.DatatypeConverter;
 
 public class Main {
 
     public static void main(String[] args) {
-        HMACGenerator HMACode = new HMACGenerator("naszeserduszka", "Kocham Justynkę");
+        HMACGenerator HMACode = new HMACGenerator("secretKey", "a massage");
         HMACode.padAndHash();
         HMACode.shortening();
         HMACode.digesting();
 
-        System.out.println("Message length: " + HMACode.getMessage().getBytes().length);
+
         System.out.println("Key: " + HMACode.getKey());
         System.out.println("Message: " + HMACode.getMessage());
-        System.out.println("Key XORd with opad + previous digest - > hashed: " + Arrays.toString(HMACode.getDigestedMessage()));
         System.out.println("Hex digested message: " + DatatypeConverter.printHexBinary(HMACode.getDigestedMessage()));
-        System.out.println("Hex digested message length: " + HMACode.getDigestedMessage().length);
-        System.out.println("Byte hashed msg:" + Arrays.toString(HMACode.getDigestedMessage()));
+
+//The HMAC shorted test:
+        HMACGenerator HMACode2 = new HMACGenerator("secretKey", "a massage");
+        HMACode2.HMACGenerating();
+
+
+        System.out.println("Key: " + HMACode2.getKey());
+        System.out.println("Message: " + HMACode2.getMessage());
+        System.out.println("Hex digested message: " + DatatypeConverter.printHexBinary(HMACode2.getDigestedMessage()));
+
 
 //The TOTP module test:
         TOTPGenerator TOTPCode = new TOTPGenerator("ggg");
 
 //        TOTPCode.creatingTimeCounter();
         TOTPCode.setMessage();
-        TOTPCode.shortening();
-        TOTPCode.padAndHash();
-        TOTPCode.digesting();
 
 //        System.out.println("Message length: " + TOTPCode.getMessage().getBytes().length);
 //        System.out.println("Key: " + TOTPCode.getKey());

@@ -1,22 +1,34 @@
 
-import javax.xml.bind.DatatypeConverter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Arrays;
 
 public class HMACGenerator {
     //BLOCK_LENGTH is a length of block used to hash the message. According to standards it shall be not shorter than 64 bytes.
-    //ipad is an inner padding string. It may be any constant string of length not longer than stated block length.
-    //opad is an outer padding string. It may be any constant string of length not longer than stated block length.
-    //If ipad or opad is shorter than block length it must be repeated until whole block is filled.
+    //IPAD is an inner padding string. It may be any constant string of length not longer than stated block length.
+    //OPAD is an outer padding string. It may be any constant string of length not longer than stated block length.
+    //If IPAD or OPAD is shorter than block length it must be repeated until whole block is filled.
 
-    //BLOCK_LENGTH, ipad and opad at his stage will be constant and not to be changed. TODO it may be changed in the future
+    //BLOCK_LENGTH, IPAD and OPAD at his stage will be constant and not to be changed.
     private byte BLOCK_LENGTH = 64; //64 is a recommended length of block
-    private byte ipad = 0x36; //The bytes used as ipad and opad are random and may be changes TODO check this info
-    private byte opad = 0x5c;
+    private byte IPAD = 0x36;
+    private byte OPAD = 0x5c;
+    private byte[] keyIpad = new byte[BLOCK_LENGTH];
+    private byte[] keyOpad = new byte[BLOCK_LENGTH];
 
     protected String key ; //TODO make sure that key is always assigned OR put nullpointer exeption over subsequent code
     protected String message;
+
+    protected MessageDigest digestingInstanceInit(){
+        try {
+            MessageDigest md = MessageDigest.getInstance("SHA1");
+            return md;
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+
     protected byte[] messageToDigest;
     protected byte[] digestedMessage;
 
@@ -37,8 +49,6 @@ public class HMACGenerator {
         return key;
     }
 
-    public byte getBlockLength(){ return BLOCK_LENGTH;}
-
     public byte[] getDigestedMessage(){
         return digestedMessage;
     }
@@ -52,35 +62,14 @@ public class HMACGenerator {
 
     }
 
-    public byte[] shortening() {
-        byte[] messageArray = message.getBytes();
-        if (messageArray.length > BLOCK_LENGTH) {
-            try {
-                MessageDigest md = MessageDigest.getInstance("SHA1"); //TODO assure that instance in shortening and digesting is the same thing
-                md.reset();
-                md.update(messageArray);
-                messageToDigest = md.digest();
-                System.out.println("The message was preliminarily digested as the message was longer than assumed blocked length.");
-
-                md.reset();
-
-                return messageToDigest;
-            } catch (NoSuchAlgorithmException e) {
-                e.printStackTrace();
-            }
-        }
-        else {
-        messageToDigest = messageArray;
-        return messageToDigest;
-        }
-        return new byte[0];
+    public void HMACGenerating(){
+        digestingInstanceInit();
+        padAndHash();
+        shortening();
+        digesting();
     }
-
-    private byte[] keyIpad = new byte[BLOCK_LENGTH];
-    private byte[] keyOpad = new byte[BLOCK_LENGTH];
-
-    /*padAndHash() is firstly padding ipad and opad in arrays of block length and then XOR the key with opad and ipad*/
-    public void padAndHash() {
+    /*padAndHash() is firstly padding IPAD and OPAD in arrays of BLOCK_LENGTH length and then XOR the key with OPAD and IPAD*/
+    private void padAndHash() {
         byte[] keyInBytes = key.getBytes();
         for (int i = 0; i < BLOCK_LENGTH; i++) {
             if (i < keyInBytes.length) {
@@ -91,28 +80,33 @@ public class HMACGenerator {
                 keyOpad[i] = 0;
             }
 
-            keyIpad[i] ^= ipad;
-            keyOpad[i] ^= opad;
+            keyIpad[i] ^= IPAD;
+            keyOpad[i] ^= OPAD;
         }
     }
 
-//TODO check if proteced will be enough?
-    public byte[] digesting(){
+    private byte[] shortening(MessageDigest md) {
+        byte[] messageArray = message.getBytes();
+        if (messageArray.length > BLOCK_LENGTH) {
+                md.reset();
+                md.update(messageArray);
+                messageToDigest = md.digest();
+                System.out.println("The message was preliminarily digested as the message was longer than assumed blocked length.");
 
-//    if(preDigest.length == 0){
-//        byte[] messageInBytes = message.getBytes();
-//        messageToDigest =  messageInBytes;
-//    }
-//    else{
-//        messageToDigest = preDigest;
-//    }
-        try{
-//            System.out.println("messageToDigest inside HMAC " + Arrays.toString(messageToDigest) + " and in hex: " + DatatypeConverter.printHexBinary(messageToDigest));
-            MessageDigest md  = MessageDigest.getInstance("SHA1");
+                return messageToDigest;
+        }
+        else {
+        messageToDigest = messageArray;
+
+        return messageToDigest;
+        }
+    }
+
+        private byte[] digesting(MessageDigest md, byte[] messageToDigest){
+            md.reset();
             md.update(keyIpad);
             md.update(messageToDigest);
             byte[] innerDigest = md.digest();
-
 
             md.reset();
 
@@ -121,10 +115,5 @@ public class HMACGenerator {
             digestedMessage = md.digest();
 
             return digestedMessage;
-        }
-        catch(NoSuchAlgorithmException e){
-            e.printStackTrace();
-        }
-        return new byte[0];
     }
 }
