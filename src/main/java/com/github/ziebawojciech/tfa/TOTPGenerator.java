@@ -1,4 +1,4 @@
-package io.github.ziebawojciech.tfa;
+package com.github.ziebawojciech.tfa;
 import java.time.Instant;
 
 public class TOTPGenerator extends HMACGenerator {

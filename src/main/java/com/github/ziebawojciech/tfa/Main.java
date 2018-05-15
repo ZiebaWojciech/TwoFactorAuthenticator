@@ -1,4 +1,4 @@
-package io.github.ziebawojciech.tfa;
+package com.github.ziebawojciech.tfa;
 import javax.xml.bind.DatatypeConverter;
 
 
