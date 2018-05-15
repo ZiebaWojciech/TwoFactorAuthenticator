@@ -3,7 +3,7 @@ package com.github.ziebawojciech.tfa;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-//import org.apache.commons.codec.binary;
+import org.apache.commons.codec.binary.*;
 
 
 public class HMACGenerator {
@@ -22,6 +22,8 @@ public class HMACGenerator {
           return digestMessage(padAndHashIPAD(key), padAndHashOPAD(key), initiateDigestingInstance(), shortenMessageLongerThanBlockLength(initiateDigestingInstance(), message));
     }
     //Encode a key into a base32 string
+
+
 
     /*padAndHashIPAD() is firstly padding IPAD in arrays of BLOCK_LENGTH length and then XOR the key with IPAD*/
     private byte[] padAndHashIPAD(String key) {
