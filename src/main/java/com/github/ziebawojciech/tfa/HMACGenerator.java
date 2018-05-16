@@ -23,8 +23,16 @@ public class HMACGenerator {
                                 padAndHashOPAD(key),
                                 initiateDigestingInstance(),
                                 shortenMessageLongerThanBlockLength(initiateDigestingInstance(),
-                                                                    message));
+                                                                    encodeMessageAsByteArray(message)));
     }
+
+    public byte[] hashCodeForTOTP(String key, byte[] timeCounter){
+        return digestMessage(   padAndHashIPAD(key),
+                                padAndHashOPAD(key),
+                                initiateDigestingInstance(),
+                                timeCounter);
+    }
+
     //Encode a key into a base32 string
 
 
@@ -70,16 +78,20 @@ public class HMACGenerator {
         return null;
     }
 
-    private byte[] shortenMessageLongerThanBlockLength(MessageDigest msgDigestBuffer, String message) {
+    private byte[] encodeMessageAsByteArray(String message){
+        return message.getBytes();
+    }
+
+    private byte[] shortenMessageLongerThanBlockLength(MessageDigest msgDigestBuffer, byte[] message) {
         byte [] messageToDigest;
-        if (message.getBytes().length > BLOCK_LENGTH) {
+        if (message.length > BLOCK_LENGTH) {
                 msgDigestBuffer.reset();
-                msgDigestBuffer.update(message.getBytes());
+                msgDigestBuffer.update(message);
                 messageToDigest = msgDigestBuffer.digest();
                 System.out.println("The message was preliminarily digested as the message was longer than assumed blocked length.");
         }
         else {
-        messageToDigest = message.getBytes();
+        messageToDigest = message;
         }
         return messageToDigest;
     }

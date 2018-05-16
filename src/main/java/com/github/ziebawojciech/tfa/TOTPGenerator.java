@@ -1,5 +1,6 @@
 package com.github.ziebawojciech.tfa;
 import javax.xml.bind.DatatypeConverter;
+import javax.xml.crypto.Data;
 import java.math.BigInteger;
 import java.time.Instant;
 import java.util.Arrays;
@@ -18,17 +19,17 @@ public class TOTPGenerator extends HMACGenerator {
 
 
     public int generateTOTPCode(String key){
-        return dynamicTruncation(generateHMACode(key, createTimeCounter()));
+        return dynamicTruncation(hashCodeForTOTP(key, createTimeCounter()));
     }
 
     //  In TOTP a time counter act as a message in regular HMAC algorithm
-    private String createTimeCounter(){
+    private byte[] createTimeCounter(){
         //The time counter is Unix Epoch divided by time-step (in this case - 30 seconds) and act as a MESSAGE for HMAC generating algorithm
-        byte[] timeCounter = BigInteger.valueOf(Instant.now().getEpochSecond()/30L).toByteArray();
+        byte[] timeCounter = BigInteger.valueOf(59/30).toByteArray();
         System.out.println("time counter as string " + Instant.now().getEpochSecond()/30L);
-        System.out.println("time counter as array " + Arrays.toString(timeCounter));
-        System.out.println(String.valueOf(Instant.now().getEpochSecond()/30L));
-        return Arrays.toString(timeCounter);
+        System.out.println("time counter as hex " + DatatypeConverter.printHexBinary(timeCounter));
+        System.out.println("time counter as string rep " + Arrays.toString(Long.toString((Instant.now().getEpochSecond())/30L).getBytes()));
+        return timeCounter;
     }
 
     //dynamicTruncation firstly get the low-order 4 bits out of the digestedMessage[length -1] byte, which is an offset value.
