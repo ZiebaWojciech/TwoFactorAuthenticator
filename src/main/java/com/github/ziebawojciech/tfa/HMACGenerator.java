@@ -27,8 +27,8 @@ public class HMACGenerator {
     }
 
     public byte[] hashCodeForTOTP(String key, byte[] timeCounter){
-        return digestMessage(   padAndHashIPAD(keyToBase32(key)),
-                                padAndHashOPAD(keyToBase32(key)),
+        return digestMessage(   padAndHashIPAD(key.toUpperCase()),
+                                padAndHashOPAD(key.toUpperCase()),
                                 initiateDigestingInstance(),
                                 timeCounter);
     }
@@ -36,8 +36,8 @@ public class HMACGenerator {
     //Encode a key into a base32 string
     public String keyToBase32(String key){
         Base32 base32Key = new Base32();
-//        System.out.println(base32Key.encodeAsString(key.getBytes()));
-        return base32Key.encodeAsString(key.getBytes());
+        System.out.println((key.toUpperCase()).getBytes());
+        return base32Key.encodeToString((key.toUpperCase()).getBytes());
 //        return base32KeyNew;
     }
 
