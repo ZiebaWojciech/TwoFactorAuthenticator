@@ -35,10 +35,10 @@ public class TOTPGenerator extends HMACGenerator {
                 timeCounter2[i]=timeCounter[i-(8-timeCounter.length)];
             }
         }
-        System.out.println(Arrays.toString(timeCounter2));
-        System.out.println("time counter as string " + Instant.now().getEpochSecond()/30L);
-        System.out.println("time counter as hex " + DatatypeConverter.printHexBinary(timeCounter2));
-        System.out.println("time counter as string rep " + Arrays.toString(Long.toString((59/30L)).getBytes()));
+//        System.out.println(Arrays.toString(timeCounter2));
+//        System.out.println("time counter as string " + Instant.now().getEpochSecond()/30L);
+//        System.out.println("time counter as hex " + DatatypeConverter.printHexBinary(timeCounter2));
+//        System.out.println("time counter as string rep " + Arrays.toString(Long.toString((59/30L)).getBytes()));
         return timeCounter2;
     }
 

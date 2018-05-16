@@ -19,25 +19,26 @@ public class HMACGenerator {
     private static final byte OPAD = 0x5c;
 
     public byte[] generateHMACode(String key, String message){
-          return digestMessage( padAndHashIPAD(key),
-                                padAndHashOPAD(key),
+          return digestMessage( padAndHashIPAD(keyToBase32(key)),
+                                padAndHashOPAD(keyToBase32(key)),
                                 initiateDigestingInstance(),
                                 shortenMessageLongerThanBlockLength(initiateDigestingInstance(),
                                                                     encodeMessageAsByteArray(message)));
     }
 
     public byte[] hashCodeForTOTP(String key, byte[] timeCounter){
-        return digestMessage(   padAndHashIPAD(key),
-                                padAndHashOPAD(key),
+        return digestMessage(   padAndHashIPAD(keyToBase32(key)),
+                                padAndHashOPAD(keyToBase32(key)),
                                 initiateDigestingInstance(),
                                 timeCounter);
     }
 
     //Encode a key into a base32 string
-    public void keyToBase32(byte[] key){
+    public String keyToBase32(String key){
         Base32 base32Key = new Base32();
-        base32Key.encode(key);
-        System.out.println(base32Key);
+//        System.out.println(base32Key.encodeAsString(key.getBytes()));
+        return base32Key.encodeAsString(key.getBytes());
+//        return base32KeyNew;
     }
 
 
