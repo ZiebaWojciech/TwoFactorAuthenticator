@@ -34,7 +34,11 @@ public class HMACGenerator {
     }
 
     //Encode a key into a base32 string
-
+    public void keyToBase32(byte[] key){
+        Base32 base32Key = new Base32();
+        base32Key.encode(key);
+        System.out.println(base32Key);
+    }
 
 
     /*padAndHashIPAD() is firstly padding IPAD in arrays of BLOCK_LENGTH length and then XOR the key with IPAD*/

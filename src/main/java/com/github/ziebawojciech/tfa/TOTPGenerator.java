@@ -25,11 +25,21 @@ public class TOTPGenerator extends HMACGenerator {
     //  In TOTP a time counter act as a message in regular HMAC algorithm
     private byte[] createTimeCounter(){
         //The time counter is Unix Epoch divided by time-step (in this case - 30 seconds) and act as a MESSAGE for HMAC generating algorithm
-        byte[] timeCounter = BigInteger.valueOf(59/30).toByteArray();
+        byte[] timeCounter2 = new byte[8];
+        byte[] timeCounter = BigInteger.valueOf(Instant.now().getEpochSecond()/30L).toByteArray();
+        for(int i=0;i<8;i++){
+            if(i<(8-timeCounter.length)){
+                timeCounter2[i]=0x00;
+            }
+            else{
+                timeCounter2[i]=timeCounter[i-(8-timeCounter.length)];
+            }
+        }
+        System.out.println(Arrays.toString(timeCounter2));
         System.out.println("time counter as string " + Instant.now().getEpochSecond()/30L);
-        System.out.println("time counter as hex " + DatatypeConverter.printHexBinary(timeCounter));
-        System.out.println("time counter as string rep " + Arrays.toString(Long.toString((Instant.now().getEpochSecond())/30L).getBytes()));
-        return timeCounter;
+        System.out.println("time counter as hex " + DatatypeConverter.printHexBinary(timeCounter2));
+        System.out.println("time counter as string rep " + Arrays.toString(Long.toString((59/30L)).getBytes()));
+        return timeCounter2;
     }
 
     //dynamicTruncation firstly get the low-order 4 bits out of the digestedMessage[length -1] byte, which is an offset value.
