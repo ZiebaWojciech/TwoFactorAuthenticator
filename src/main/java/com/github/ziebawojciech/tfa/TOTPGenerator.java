@@ -1,5 +1,8 @@
 package com.github.ziebawojciech.tfa;
+import javax.xml.bind.DatatypeConverter;
+import java.math.BigInteger;
 import java.time.Instant;
+import java.util.Arrays;
 
 public class TOTPGenerator extends HMACGenerator {
     //Time-Based One-time Password Generator is using HMAC(K,C) method where K is a secret shared between parts and C is a time-based counter.
@@ -21,8 +24,11 @@ public class TOTPGenerator extends HMACGenerator {
     //  In TOTP a time counter act as a message in regular HMAC algorithm
     private String createTimeCounter(){
         //The time counter is Unix Epoch divided by time-step (in this case - 30 seconds) and act as a MESSAGE for HMAC generating algorithm
-        String timeCounter = Long.toString((Instant.now().getEpochSecond())/30L);
-        return timeCounter;
+        byte[] timeCounter = BigInteger.valueOf(Instant.now().getEpochSecond()/30L).toByteArray();
+        System.out.println("time counter as string " + Instant.now().getEpochSecond()/30L);
+        System.out.println("time counter as array " + Arrays.toString(timeCounter));
+        System.out.println(String.valueOf(Instant.now().getEpochSecond()/30L));
+        return Arrays.toString(timeCounter);
     }
 
     //dynamicTruncation firstly get the low-order 4 bits out of the digestedMessage[length -1] byte, which is an offset value.

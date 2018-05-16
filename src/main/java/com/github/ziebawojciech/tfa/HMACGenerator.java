@@ -19,7 +19,11 @@ public class HMACGenerator {
     private static final byte OPAD = 0x5c;
 
     public byte[] generateHMACode(String key, String message){
-          return digestMessage(padAndHashIPAD(key), padAndHashOPAD(key), initiateDigestingInstance(), shortenMessageLongerThanBlockLength(initiateDigestingInstance(), message));
+          return digestMessage( padAndHashIPAD(key),
+                                padAndHashOPAD(key),
+                                initiateDigestingInstance(),
+                                shortenMessageLongerThanBlockLength(initiateDigestingInstance(),
+                                                                    message));
     }
     //Encode a key into a base32 string
 
