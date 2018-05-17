@@ -27,28 +27,30 @@ public class HMACGenerator {
     }
 
     public byte[] hashCodeForTOTP(String key, byte[] timeCounter){
-        return digestMessage(   padAndHashIPAD(key.toUpperCase()),
-                                padAndHashOPAD(key.toUpperCase()),
+        return digestMessage(   padAndHashIPAD(keyToBase32(key)),
+                                padAndHashOPAD(keyToBase32(key)),
                                 initiateDigestingInstance(),
                                 timeCounter);
     }
 
-    //Encode a key into a base32 string
-    public String keyToBase32(String key){
-        Base32 base32Key = new Base32();
-        System.out.println((key.toUpperCase()).getBytes());
-        return base32Key.encodeToString((key.toUpperCase()).getBytes());
-//        return base32KeyNew;
+    //Encode a key into a base32 byteArray
+    public byte[] keyToBase32(String key){
+        try{
+            return Base32String.decode(key);
+        }
+        catch(Base32String.DecodingException e){
+        }
+        return new byte[0];
     }
 
 
     /*padAndHashIPAD() is firstly padding IPAD in arrays of BLOCK_LENGTH length and then XOR the key with IPAD*/
-    private byte[] padAndHashIPAD(String key) {
+    private byte[] padAndHashIPAD(byte[] key) {
         byte[] keyIPAD = new byte[BLOCK_LENGTH];
 
         for (int i = 0; i < BLOCK_LENGTH; i++) {
-            if (i < key.getBytes().length) {
-                keyIPAD[i] = key.getBytes()[i];
+            if (i < key.length) {
+                keyIPAD[i] = key[i];
             } else {
                 keyIPAD[i] = 0;
             }
@@ -58,12 +60,12 @@ public class HMACGenerator {
     }
 
     /*padAndHashOPAD() is firstly padding OPAD in array of BLOCK_LENGTH length and then XOR the key with OPAD*/
-    private byte[] padAndHashOPAD(String key) {
+    private byte[] padAndHashOPAD(byte[] key) {
         byte[] keyOPAD = new byte[BLOCK_LENGTH];
 
         for (int i = 0; i < BLOCK_LENGTH; i++) {
-            if (i < key.getBytes().length) {
-                keyOPAD[i] = key.getBytes()[i];
+            if (i < key.length) {
+                keyOPAD[i] = key[i];
             } else {
                 keyOPAD[i] = 0;
             }

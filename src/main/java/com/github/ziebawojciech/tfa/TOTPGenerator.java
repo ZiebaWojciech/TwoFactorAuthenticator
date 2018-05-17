@@ -18,7 +18,7 @@ public class TOTPGenerator extends HMACGenerator {
     }
 
 
-    public int generateTOTPCode(String key){
+    public String generateTOTPCode(String key){
         return dynamicTruncation(hashCodeForTOTP(key, createTimeCounter()));
     }
 
@@ -44,7 +44,7 @@ public class TOTPGenerator extends HMACGenerator {
 
     //dynamicTruncation firstly get the low-order 4 bits out of the digestedMessage[length -1] byte, which is an offset value.
     //a truncated message is a four byte out of the original message [offset, offset+3].
-    private int dynamicTruncation(byte[] HMACodeForTimeCounter) {
+    private String dynamicTruncation(byte[] HMACodeForTimeCounter) {
         int truncatedMessage = 0;
         int offset = HMACodeForTimeCounter[HMACodeForTimeCounter.length - 1] & 15;
         //in binary 0x7f is 0111 111, so we purposely drop the most significant bit (MSB) to be sure the result will be un-signed
@@ -54,7 +54,13 @@ public class TOTPGenerator extends HMACGenerator {
                                 | (HMACodeForTimeCounter[offset + 2] & 0xff) << 8
                                 | (HMACodeForTimeCounter[offset + 3] & 0xff);
         }
-        return truncatedMessage % DIVISOR[digitNumber];
+        String totpCode = Integer.toString(truncatedMessage % DIVISOR[digitNumber]);
+        if(totpCode.length()<digitNumber) {
+            for (int i = 0; i < (totpCode.length() - digitNumber); i++) {
+                totpCode = ("0" + totpCode);
+            }
+        }
+        return totpCode;
     }
 
 

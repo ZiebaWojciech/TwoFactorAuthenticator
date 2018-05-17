@@ -14,16 +14,16 @@ public class Main {
 //
         TOTPGenerator TOTPCode = new TOTPGenerator();
         TOTPCode.setDigitNumber(6);
-        System.out.println("TOTP digit code: " + TOTPCode.generateTOTPCode("aleocochodziztymwszy"));
+        System.out.println("TOTP digit code: " + TOTPCode.generateTOTPCode("JJBFGV2ZGNCFARKIKBFTGUC2"));
 
-//        Timer t = new Timer();
-//        t.schedule(new TimerTask() {
-//        @Override
-//        public void run() {
-//            TOTPGenerator TOTPCode = new TOTPGenerator();
-//            TOTPCode.setDigitNumber(6);
-//            System.out.println("TOTP digit code at time " + + TOTPCode.generateTOTPCode("aleocochodziztymwszystkim"));
-//        }
-//    }, 0, 30000);
+        Timer t = new Timer();
+        t.schedule(new TimerTask() {
+        @Override
+        public void run() {
+            TOTPGenerator TOTPCode = new TOTPGenerator();
+            TOTPCode.setDigitNumber(6);
+            System.out.println("TOTP digit code at time " + TOTPCode.generateTOTPCode("aleocochodziztymwszystkim"));
+        }
+    }, 0, 30000);
 }
 }
