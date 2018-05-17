@@ -34,13 +34,10 @@ public class HMACGenerator {
     }
 
     //Encode a key into a base32 byteArray
-    public byte[] keyToBase32(String key){
-        try{
-            return Base32String.decode(key);
-        }
-        catch(Base32String.DecodingException e){
-        }
-        return new byte[0];
+    private byte[] keyToBase32(String key){
+    Base32 keyArray = new Base32();
+    return keyArray.decode(key);
+
     }
 
 
