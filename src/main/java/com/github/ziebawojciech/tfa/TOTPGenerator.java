@@ -55,8 +55,9 @@ public class TOTPGenerator extends HMACGenerator {
                                 | (HMACodeForTimeCounter[offset + 3] & 0xff);
         }
         String totpCode = Integer.toString(truncatedMessage % DIVISOR[digitNumber]);
-        if(totpCode.length()<digitNumber) {
-            for (int i = 0; i < (totpCode.length() - digitNumber); i++) {
+        int totpCodeLength = totpCode.length();
+        if(totpCodeLength<digitNumber) {
+            for (int i = 0; i < (digitNumber-totpCodeLength); i++) {
                 totpCode = ("0" + totpCode);
             }
         }

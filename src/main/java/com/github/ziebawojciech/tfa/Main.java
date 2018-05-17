@@ -25,5 +25,16 @@ public class Main {
             System.out.println("TOTP digit code at time " + TOTPCode.generateTOTPCode("aleocochodziztymwszystkim"));
         }
     }, 0, 30000);
+//        int digitNumber = 6;
+//        String totpCode = "test";
+//        int codeLength = totpCode.length();
+//        if(totpCode.length()<digitNumber) {
+//            for (int i = 0; i < (digitNumber - codeLength); i++) {
+//                totpCode = ("0" + totpCode);
+//            }
+//        }
+//        System.out.println(totpCode);
+    }
+
 }
-}
+
